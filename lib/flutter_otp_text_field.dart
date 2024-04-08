@@ -45,6 +45,8 @@ class OtpTextField extends StatefulWidget {
   final List<TextStyle?> styles;
   final List<TextInputFormatter>? inputFormatters;
   final EdgeInsetsGeometry? contentPadding;
+  final bool reversed;
+  final InputBorder? filledBorder;
 
   OtpTextField({
     this.showCursor = true,
@@ -80,6 +82,8 @@ class OtpTextField extends StatefulWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.inputFormatters,
     this.contentPadding,
+    this.reversed = false,
+    this.filledBorder,
   })  : assert(numberOfFields > 0),
         assert(styles.length > 0
             ? styles.length == numberOfFields
@@ -145,6 +149,10 @@ class _OtpTextFieldState extends State<OtpTextField> {
     required int index,
     TextStyle? style,
   }) {
+    final cont = _textControllers[index];
+    if (widget.filledBorder != null && cont?.text.isNotEmpty == true) {
+      decor = decor?.copyWith(enabledBorder: widget.filledBorder);
+    }
     return Container(
       width: widget.fieldWidth,
       height: widget.fieldHeight,
@@ -154,17 +162,18 @@ class _OtpTextFieldState extends State<OtpTextField> {
         showCursor: widget.showCursor,
         keyboardType: widget.keyboardType,
         textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.center,
         maxLength: 1,
         readOnly: widget.readOnly,
         style: style ?? widget.textStyle,
         autofocus: widget.autoFocus,
         cursorColor: widget.cursorColor,
-        controller: _textControllers[index],
+        controller: cont,
         focusNode: _focusNodes[index],
         enabled: widget.enabled,
         inputFormatters: widget.inputFormatters,
         decoration: widget.hasCustomInputDecoration
-            ? widget.decoration
+            ? decor
             : InputDecoration(
                 counterText: "",
                 filled: widget.filled,
@@ -240,7 +249,7 @@ class _OtpTextFieldState extends State<OtpTextField> {
     return Row(
       mainAxisAlignment: widget.mainAxisAlignment,
       crossAxisAlignment: widget.crossAxisAlignment,
-      children: textFields,
+      children: widget.reversed ? textFields.reversed.toList() : textFields,
     );
   }
 
