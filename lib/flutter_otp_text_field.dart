@@ -150,6 +150,7 @@ class _OtpTextFieldState extends State<OtpTextField> {
     TextStyle? style,
   }) {
     final cont = _textControllers[index];
+    InputDecoration? decor = widget.decoration;
     if (widget.filledBorder != null && cont?.text.isNotEmpty == true) {
       decor = decor?.copyWith(enabledBorder: widget.filledBorder);
     }
